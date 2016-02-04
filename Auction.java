@@ -14,6 +14,8 @@ public class Auction
     // The number that will be given to the next lot entered
     // into this auction.
     private int nextLotNumber;
+    //lista de los objetos no subastados
+    private ArrayList<Lot> noSubs;
 
     /**
      * Create a new auction.
@@ -21,6 +23,7 @@ public class Auction
     public Auction()
     {
         lots = new ArrayList<Lot>();
+        noSubs = new ArrayList<Lot>();
         nextLotNumber = 1;
     }
 
@@ -31,6 +34,7 @@ public class Auction
     public void enterLot(String description)
     {
         lots.add(new Lot(nextLotNumber, description));
+        noSubs.add(new Lot(nextLotNumber, description));
         nextLotNumber++;
     }
 
@@ -62,6 +66,7 @@ public class Auction
             if(successful) {
                 System.out.println("The bid for lot number " +
                     lotNumber + " was successful.");
+                    removeObjetoPujado(lotNumber);
             }
             else {
                 // Report which bid is higher.
@@ -110,19 +115,45 @@ public class Auction
      */
     public void close()
     {
-         for ( Lot objetos : lots ){
-              System.out.println(objetos.toString());
-              if (objetos
-              .getHighestBid()== null){
+        for ( Lot objetos : lots ){
+            System.out.println(objetos.toString());
+            if (objetos.getHighestBid()== null){
                 System.out.println("no se efectuaron pujas demomento para el objeto");
-                }
-                else{
+            }
+            else{
                 //pasar a elemento de tipo bid
-                //para poder inbocar sus metodos y averiguar el nombre para qu el metodo o devuelva
+                //para poder invocar sus metodos y averiguar el nombre para que el metodo lo devuelva
                 System.out.println("nombre de la mayor puja : "+ objetos.getHighestBid().getBidder().getName());
-                System.out.println("con valo:" + objetos.getHighestBid().getValue());
-                }
-                
+                System.out.println("con valor:" + objetos.getHighestBid().getValue());
+            }
+
         }
+    }
+
+    /**
+     * metodo para eliminar dde la lista elementos por los que se pujan 
+     */
+    public void removeObjetoPujado(int lotNumber)
+    {
+        int index = 0;
+        boolean pujado = false;
+        while(index < noSubs.size() && !pujado) {
+            if (noSubs.get(index).getNumber()== lotNumber){
+                noSubs.remove(index);
+                
+            }
+            index++;
+
+        }
+    }
+
+    /**
+     * metodo que devuelve una colección de todos los items por los que no habido ninguna puja en este momento
+     */
+    public ArrayList getUnsold()
+    {
+
+        return noSubs;
+
     }
 }
